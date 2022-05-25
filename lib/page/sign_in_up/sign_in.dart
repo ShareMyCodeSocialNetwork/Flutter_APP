@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:flutter_app/page/sign_in_up/sing_up.dart';
 import '../home.dart';
 
 //connection page
@@ -18,34 +18,25 @@ class _Sign_inState extends State<Sign_in> {
       appBar: AppBar(
         title: const Text('Se Connecter'),
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: true,//boutton retour sur lappbar
       ),
       body: Container(
-        color: Colors.black,
-        height: double.infinity,
-        width: double.infinity,
-        child: form()
-      ),
+          color: Colors.black,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              form(),
+              bottomSign_in(),
+            ],
+          )),
     );
   }
 
-  Column bottomSign_in(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ElevatedButton(
-          onPressed: () {},
-          child: Text('test'),
-        )
-      ],
-    );
-  }
-
-
-  Form form(){
+  Form form() {
     return Form(
       key: _formKey,
-      child:
-      Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -71,7 +62,9 @@ class _Sign_inState extends State<Sign_in> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Veuillez remplir ce champs';
-              }else if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
+              } else if (!RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  .hasMatch(value)) {
                 return 'Email invalide';
               }
               return null;
@@ -153,6 +146,27 @@ class _Sign_inState extends State<Sign_in> {
     );
   }
 
+  Align bottomSign_in() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) {
+            return Sign_up();
+          }));
+        },
+        child: Text('Pas de compte ? créer en un !'),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith(
+            (states) {
+              return Colors.black;
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> invalidEmailOrPassword() async {
     return showDialog<void>(

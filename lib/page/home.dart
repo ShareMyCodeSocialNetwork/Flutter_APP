@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Title'),
         backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: true,//boutton retour sur lappbar
       ),
       body: currentIndex == 0
           ? News()
