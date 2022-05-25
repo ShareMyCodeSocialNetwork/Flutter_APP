@@ -18,18 +18,19 @@ class _Sign_inState extends State<Sign_in> {
       appBar: AppBar(
         title: const Text('Se Connecter'),
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: true,//boutton retour sur lappbar
+        automaticallyImplyLeading: false, //boutton retour sur lappbar
       ),
       body: Container(
-          color: Colors.black,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: [
-              form(),
-              bottomSign_in(),
-            ],
-          )),
+        color: Colors.black,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: [
+            form(),
+            bottomSign_in(),
+          ],
+        ),
+      ),
     );
   }
 
