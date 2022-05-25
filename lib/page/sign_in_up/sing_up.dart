@@ -131,7 +131,9 @@ class _Sign_upState extends State<Sign_up> {
               child: TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Veuillez remplir ce champs';
+                  }else if(value.length < 8 && value.length > 30){ //todo a regarder flem de reflechir il est tard ˆˆ'
+                    return 'Le mot de passe doit contenir entre 8 et 30 caractères';
                   }
                   return null;
                 },
