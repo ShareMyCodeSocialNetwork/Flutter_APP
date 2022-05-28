@@ -14,6 +14,7 @@ class _Sign_upState extends State<Sign_up> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: const Text('S\'enregistrer'),
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false, //boutton retour sur lappbar
