@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/page/sign_in_up/sing_up.dart';
+import 'package:flutter_app/web/use_case/user/command/user_command.dart';
+import 'package:flutter_app/web/use_case/user/entities/user_request.dart';
 import '../home.dart';
 
 //connection page
@@ -11,7 +13,11 @@ class Sign_in extends StatefulWidget {
 }
 
 class _Sign_inState extends State<Sign_in> {
+  var userCommand = new UserCommand();
   final _formKey = GlobalKey<FormState>();
+  String? _email;
+  String? _password = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +66,7 @@ class _Sign_inState extends State<Sign_in> {
         child: Padding(
           padding: EdgeInsets.only(left: 15, right: 15, top: 5),
           child: TextFormField(
+
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Veuillez remplir ce champs';
@@ -69,6 +76,9 @@ class _Sign_inState extends State<Sign_in> {
                 return 'Email invalide';
               }
               return null;
+            },
+            onSaved: (String? value){
+              _email = value;
             },
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -99,7 +109,9 @@ class _Sign_inState extends State<Sign_in> {
                     return 'Please enter some text';
                   }
                   return null;
-                },
+                },onSaved: (String? value){
+                  _password = value;
+              },
                 obscureText: true,
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -120,20 +132,25 @@ class _Sign_inState extends State<Sign_in> {
         height: 50,
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Connexion en cours...')),
               );
-              //requete de connexion
-              //if requete ok
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return Home();
-              }));
+              _formKey.currentState?.save();
+              var userRequest = new UserRequest();
+              userRequest.email = _email;
+              userRequest.password = _password;
 
-              //else
-              invalidEmailOrPassword();
+              if(await userCommand.login(userRequest) == true){
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                      return Home();
+                    })
+                );
+              }else{
+                invalidEmailOrPassword();
+              }
             }
           },
           child: Text(
