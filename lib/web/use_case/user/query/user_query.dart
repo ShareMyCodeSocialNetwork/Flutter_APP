@@ -16,5 +16,14 @@ class UserQuery {
     }
   }
 
+  Future<bool> pseudoExist(String pseudo) async {
+    final response = await http.get(Uri.parse(global.buildUrl('user/pseudo/' + pseudo)));
+    return response.statusCode == 200 ? true : false;
+  }
+
+  Future<bool> userExist(int id) async {
+    final response = await http.get(Uri.parse(global.buildUrl('user/' + id.toString())));
+    return response.statusCode == 200 ? true : false;
+  }
 
 }

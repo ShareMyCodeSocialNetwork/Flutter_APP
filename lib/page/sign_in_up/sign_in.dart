@@ -27,16 +27,16 @@ class _Sign_inState extends State<Sign_in> {
         automaticallyImplyLeading: false, //boutton retour sur lappbar
       ),
       body: Container(
-        color: Colors.black,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: [
-            form(),
-            bottomSign_in(),
-          ],
+          color: Colors.black,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              form(),
+              bottomSign_in(),
+            ],
+          ),
         ),
-      ),
     );
   }
 
@@ -66,7 +66,6 @@ class _Sign_inState extends State<Sign_in> {
         child: Padding(
           padding: EdgeInsets.only(left: 15, right: 15, top: 5),
           child: TextFormField(
-
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Veuillez remplir ce champs';
@@ -77,7 +76,7 @@ class _Sign_inState extends State<Sign_in> {
               }
               return null;
             },
-            onSaved: (String? value){
+            onSaved: (String? value) {
               _email = value;
             },
             decoration: InputDecoration(
@@ -109,9 +108,10 @@ class _Sign_inState extends State<Sign_in> {
                     return 'Please enter some text';
                   }
                   return null;
-                },onSaved: (String? value){
+                },
+                onSaved: (String? value) {
                   _password = value;
-              },
+                },
                 obscureText: true,
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -142,13 +142,12 @@ class _Sign_inState extends State<Sign_in> {
               userRequest.email = _email;
               userRequest.password = _password;
 
-              if(await userCommand.login(userRequest) == true){
+              if (await userCommand.login(userRequest) == true) {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
-                      return Home();
-                    })
-                );
-              }else{
+                  return Home();
+                }));
+              } else {
                 invalidEmailOrPassword();
               }
             }

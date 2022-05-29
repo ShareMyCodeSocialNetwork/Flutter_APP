@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/page/sign_in_up/sign_in.dart';
+import 'package:flutter_app/web/use_case/user/entities/user_request.dart';
+import 'package:flutter_app/web/use_case/user/query/user_query.dart';
+
+import '../../web/use_case/user/command/user_command.dart';
 
 class Sign_up extends StatefulWidget {
   const Sign_up({Key? key}) : super(key: key);
@@ -10,11 +14,15 @@ class Sign_up extends StatefulWidget {
 
 class _Sign_upState extends State<Sign_up> {
   final _formKey = GlobalKey<FormState>();
+  var userCommand = new UserCommand();
+  var userQuery = new UserQuery();
+  var userRequest = new UserRequest();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: false,
+        centerTitle: true,
         title: const Text('S\'enregistrer'),
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false, //boutton retour sur lappbar
@@ -24,7 +32,12 @@ class _Sign_upState extends State<Sign_up> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Stack(
-          children: [form(), bottomSign_up()],
+          children: [
+            SingleChildScrollView(
+              child: form(),
+            ),
+            bottomSign_up(),
+          ],
         ),
       ),
     );
@@ -53,10 +66,16 @@ class _Sign_upState extends State<Sign_up> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Veuillez remplir ce champs';
-        }else{
-          //todo voir si on peut faire requete pour check si le pseudo est pas deja pris
+        } else {
+          //todo a voir, le async il aime pas
+          /*if (await userQuery.pseudoExist(value) == true) {
+            return 'Pseudo déjà pris !';
+        }*/
         }
         return null;
+      },
+      onSaved: (String? value) {
+        userRequest.pseudo = value;
       },
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -73,6 +92,9 @@ class _Sign_upState extends State<Sign_up> {
         }
         return null;
       },
+      onSaved: (String? value) {
+        userRequest.lastname = value;
+      },
       decoration: InputDecoration(
         border: InputBorder.none,
         labelText: 'Nom',
@@ -88,14 +110,15 @@ class _Sign_upState extends State<Sign_up> {
         }
         return null;
       },
+      onSaved: (String? value) {
+        userRequest.firstname = value;
+      },
       decoration: InputDecoration(
         border: InputBorder.none,
         labelText: 'Prénom',
       ),
     );
   }
-
-
 
   TextFormField emailTextBox() {
     return TextFormField(
@@ -108,6 +131,9 @@ class _Sign_upState extends State<Sign_up> {
           return 'Email invalide';
         }
         return null;
+      },
+      onSaved: (String? value) {
+        userRequest.email = value;
       },
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -133,10 +159,14 @@ class _Sign_upState extends State<Sign_up> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez remplir ce champs';
-                  }else if(value.length < 8 && value.length > 30){ //todo a regarder flem de reflechir il est tard ˆˆ'
+                  } else if (value.length < 8 && value.length > 30) {
+                    //todo a regarder flem de reflechir il est tard ˆˆ'
                     return 'Le mot de passe doit contenir entre 8 et 30 caractères';
                   }
                   return null;
+                },
+                onSaved: (String? value) {
+                  userRequest.password = value;
                 },
                 obscureText: true,
                 decoration: InputDecoration(
@@ -158,17 +188,31 @@ class _Sign_upState extends State<Sign_up> {
         height: 50,
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Enregistrement en cours...')),
-              );
-              //requete de creation user
-              //if requete ok
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return Sign_in();
-              }));
+              _formKey.currentState?.save();
+              if (await userQuery.pseudoExist(userRequest.pseudo.toString()) ==
+                  true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Pseudo déjà pris !')),
+                );
+              } else {
+                var response = await userCommand.createUser(userRequest);
+                if (await userQuery.userExist(response.id) == true) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Enregistrement en cours...')),
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return Sign_in();
+                    }),
+                  );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Erreur lors de la création du compte...')),
+                  );
+                }
+              }
             }
           },
           child: Text(
