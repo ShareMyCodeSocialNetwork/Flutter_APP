@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/web/global.dart' as global;
 
 import 'home/news.dart';
 import 'home/projects.dart';
@@ -19,7 +20,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('CodeBack'),
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: global.buttonColor,
         automaticallyImplyLeading: true,//boutton retour sur lappbar
       ),
       body: currentIndex == 0
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
               ? Search()
               : Projects(),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: global.buttonColor,
         items: const [
           BottomNavigationBarItem(
             label: 'News',

@@ -18,6 +18,17 @@ Future<bool> login(UserRequest userRequest) async {
   return response.statusCode == 200 ? true : false;
 }
 
+Future<bool> loginToken(UserRequest userRequest) async {
+  final response = await http.post(Uri.parse(global.buildUrl('/login')),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: userRequest.toJson());
+
+  global.connectedUser = UserResponse.fromJson(json.decode(response.body));
+  return response.statusCode == 200 ? true : false;
+}
+
 Future<UserResponse> createUser(UserRequest userRequest) async {
   final response = await http.post(Uri.parse(global.buildUrl('user/create')),
       headers: <String, String>{
