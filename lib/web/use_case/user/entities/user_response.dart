@@ -1,18 +1,18 @@
 class UserResponse{
-  int id;
-  String lastname;
-  String firstname;
-  String email;
-  String pseudo;
-  String profilePicture;
+  int? id;
+  String? lastname;
+  String? firstname;
+  String? email;
+  String? pseudo;
+  String? profilePicture;
 
   UserResponse({
-    required this.id,
-    required this.lastname,
-    required this.firstname,
-    required this.email,
-    required this.pseudo,
-    required this.profilePicture
+     this.id,
+     this.lastname,
+     this.firstname,
+     this.email,
+     this.pseudo,
+    this.profilePicture
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {
