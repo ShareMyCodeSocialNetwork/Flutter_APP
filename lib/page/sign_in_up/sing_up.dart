@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/page/sign_in_up/sign_in.dart';
+import 'package:flutter_app/web/global.dart' as global;
 import 'package:flutter_app/web/use_case/user/entities/user_request.dart';
-import 'package:flutter_app/web/use_case/user/query/user_query.dart';
+import 'package:flutter_app/web/use_case/user/query/user_query.dart'
+    as userQuery;
 
-import '../../web/use_case/user/command/user_command.dart';
+import '../../web/use_case/user/command/user_command.dart' as userCommand;
 
 class Sign_up extends StatefulWidget {
   const Sign_up({Key? key}) : super(key: key);
@@ -14,8 +16,6 @@ class Sign_up extends StatefulWidget {
 
 class _Sign_upState extends State<Sign_up> {
   final _formKey = GlobalKey<FormState>();
-  var userCommand = new UserCommand();
-  var userQuery = new UserQuery();
   var userRequest = new UserRequest();
 
   @override
@@ -66,11 +66,6 @@ class _Sign_upState extends State<Sign_up> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Veuillez remplir ce champs';
-        } else {
-          //todo a voir, le async il aime pas
-          /*if (await userQuery.pseudoExist(value) == true) {
-            return 'Pseudo déjà pris !';
-        }*/
         }
         return null;
       },
@@ -150,7 +145,7 @@ class _Sign_upState extends State<Sign_up> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Colors.white,
               borderRadius: new BorderRadius.circular(10.0),
             ),
             child: Padding(
@@ -196,9 +191,16 @@ class _Sign_upState extends State<Sign_up> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Pseudo déjà pris !')),
                 );
+              } else if (await userQuery
+                      .emailExist(userRequest.email.toString()) ==
+                  true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Un compte existe avec cette Email !')),
+                );
               } else {
                 var response = await userCommand.createUser(userRequest);
-                if (await userQuery.userExist(response.id) == true) {
+                if (await userQuery.userExist(response.id!) == true) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Enregistrement en cours...')),
                   );
@@ -207,9 +209,11 @@ class _Sign_upState extends State<Sign_up> {
                       return Sign_in();
                     }),
                   );
-                }else{
+                } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Erreur lors de la création du compte...')),
+                    const SnackBar(
+                        content:
+                            Text('Erreur lors de la création du compte...')),
                   );
                 }
               }
@@ -220,7 +224,7 @@ class _Sign_upState extends State<Sign_up> {
             style: TextStyle(color: Colors.white),
           ),
           style: ElevatedButton.styleFrom(
-              onPrimary: Colors.black, primary: Colors.blue),
+              onPrimary: Colors.red, primary: global.buttonColor),
         ),
       ),
     );
@@ -253,7 +257,7 @@ class _Sign_upState extends State<Sign_up> {
       padding: EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey,
+          color: Colors.white,
           borderRadius: new BorderRadius.circular(10.0),
         ),
         child: Padding(

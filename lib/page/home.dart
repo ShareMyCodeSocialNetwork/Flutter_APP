@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Title'),
+        title: const Text('CodeBack'),
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: true,//boutton retour sur lappbar
       ),
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           BottomNavigationBarItem(
-            label: 'Group',
+            label: 'Projet',
             icon: Icon(
               Icons.group,
               size: 20,

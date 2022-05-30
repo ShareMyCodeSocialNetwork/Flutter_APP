@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/page/sign_in_up/sing_up.dart';
-import 'package:flutter_app/web/use_case/user/command/user_command.dart';
+import 'package:flutter_app/web/use_case/user/command/user_command.dart' as userCommand;
 import 'package:flutter_app/web/use_case/user/entities/user_request.dart';
 import '../home.dart';
+import '../../web/global.dart' as global;
 
 //connection page
 class Sign_in extends StatefulWidget {
@@ -13,7 +14,6 @@ class Sign_in extends StatefulWidget {
 }
 
 class _Sign_inState extends State<Sign_in> {
-  var userCommand = new UserCommand();
   final _formKey = GlobalKey<FormState>();
   String? _email;
   String? _password = "";
@@ -60,7 +60,7 @@ class _Sign_inState extends State<Sign_in> {
       padding: EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey,
+          color: Colors.white,
           borderRadius: new BorderRadius.circular(10.0),
         ),
         child: Padding(
@@ -97,7 +97,7 @@ class _Sign_inState extends State<Sign_in> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Colors.white,
               borderRadius: new BorderRadius.circular(10.0),
             ),
             child: Padding(
@@ -143,6 +143,7 @@ class _Sign_inState extends State<Sign_in> {
               userRequest.password = _password;
 
               if (await userCommand.login(userRequest) == true) {
+                global.isConnected = true;
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   return Home();
@@ -157,7 +158,7 @@ class _Sign_inState extends State<Sign_in> {
             style: TextStyle(color: Colors.white),
           ),
           style: ElevatedButton.styleFrom(
-              onPrimary: Colors.black, primary: Colors.blue),
+               primary: global.buttonColor, ),
         ),
       ),
     );
